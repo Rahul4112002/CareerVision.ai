@@ -1,79 +1,64 @@
 {% extends "base.html" %}
 {% block content %}
     <!-- form - start -->
-    <div class="bg-gray-100 p-6 rounded-lg shadow-lg">
+    <div class="mt-2 bg-gray-100 p-4 md:p-6 rounded-lg shadow-lg max-w-screen-lg mx-auto">
         <!-- text - start -->
-        <div class="mb-10 md:mb-16">
-          <h2
-            class="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl"
-          >
+        <div class="mb-6 md:mb-10">
+          <h2 class="mb-3 text-center text-xl font-bold text-gray-800 md:mb-4 md:text-2xl lg:text-3xl">
             What's Your Ideal Career Journey?
           </h2>
 
-          <p class="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">Discover Your Ideal Career Path with This Fun Test! You've Got What It Takes, Ready to Explore?.</p>
+          <p class="mx-auto max-w-screen-md text-center text-gray-500 text-sm md:text-base">Discover Your Ideal Career Path with This Fun Test! You've Got What It Takes, Ready to Explore?</p>
         </div>
         <!-- text - end -->
-        <!-- {% if result %}
-          <h2 class="mb-4 text-center text-2xl font-bold text-red-600 md:mb-6 lg:text-3xl">
-            Predicted Job Role: {{ result }}
-          </h2>
-        {% endif %} -->
-         <!--og form-->
-
-         {% if roadmap %}
-         <div class="ml-32 mr-32 flex bg-white p-4 rounded-lg shadow-lg mb-6">
-             <!-- Left Side: Image -->
-             <div class="w-2/3">
-                 <a href="{{ roadmap.pdf.url }}" target="_blank">
-                     <img src="{{ roadmap.image.url }}" alt="{{ roadmap.title }}" class="w-full h-100 object-cover rounded-lg object-center">
-                 </a>
-             </div>
-             
-             <!-- Right Side: Details -->
-             <div class="w-2/3 pl-4">
-              <br>
-                 <h3 class="text-3xl text-center font-bold text-gray-800">{{ roadmap.title }}</h3>
-                 <br>
-                 <h3 class="text-xl  font-bold text-gray-800">Average Salary: {{ roadmap.average_salary }} LPA</h3>
-                 <br>
-                 <h3 class="text-xl  font-bold text-gray-800">Verified By:  {{ roadmap.verified_by }}</h3>
-                 <br>
-                 <div class="flex items-center justify-center">
-                  
-                  <a href="{{ roadmap.pdf.url }}" class="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 focus-visible:ring active:bg-indigo-700 md:text-base">
-                    Open Roadmap
-                  </a>
+        
+        {% if roadmap %}
+        <div class="flex flex-col md:flex-row bg-white p-4 rounded-lg shadow-lg mb-6 mx-auto">
+            <!-- Image - Stacks on mobile, side by side on larger screens -->
+            <div class="w-full md:w-1/2 mb-4 md:mb-0">
+                <a href="{{ roadmap.pdf.url }}" target="_blank">
+                    <img src="{{ roadmap.image.url }}" alt="{{ roadmap.title }}" class="w-full h-auto object-cover rounded-lg">
+                </a>
+            </div>
+            
+            <!-- Details -->
+            <div class="w-full md:w-1/2 md:pl-4 flex flex-col justify-center">
+                <h3 class="text-xl md:text-2xl text-center font-bold text-gray-800 mb-3">{{ roadmap.title }}</h3>
+                <h3 class="text-base md:text-lg font-bold text-gray-800 mb-2">Average Salary: {{ roadmap.average_salary }} LPA</h3>
+                <h3 class="text-base md:text-lg font-bold text-gray-800 mb-4">Verified By: {{ roadmap.verified_by }}</h3>
+                <div class="flex items-center justify-center">
+                    <a href="{{ roadmap.pdf.url }}" class="inline-block rounded-lg bg-indigo-500 px-6 py-2 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 focus-visible:ring active:bg-indigo-700">
+                        Open Roadmap
+                    </a>
                 </div>
-             </div>
-         </div>
-         {% endif %}
+            </div>
+        </div>
+        {% endif %}
           
-        <h1 class="mb-4 text-center text-xl font-bold text-gray-800 md:mb-6 lg:text-3xl">
+        <h1 class="mb-3 text-center text-lg font-bold text-gray-800 md:mb-4 md:text-xl lg:text-2xl">
           Let's Check your Logical Rating
         </h1>
         
-        <div class="flex items-center justify-center">
-          <a href="{% url 'quiz' %}" class="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 focus-visible:ring active:bg-indigo-700 md:text-base">
+        <div class="flex items-center justify-center mb-6">
+          <a href="{% url 'quiz' %}" class="inline-block rounded-lg bg-indigo-500 px-6 py-2 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 focus-visible:ring active:bg-indigo-700">
             Start
           </a>
         </div>
         
-
-        
         {% if logical_quotient_rating is not None %}
-          <h2 class="mb-4 text-center text-xl font-bold text-green-500 md:mb-6 lg:text-3xl">
+          <h2 class="mb-4 text-center text-lg font-bold text-green-500 md:text-xl lg:text-2xl">
             Your Logical Rating: {{ logical_quotient_rating }}
           </h2>
         {% endif %}
 
-        <form class="mx-auto grid max-w-screen-md gap-4 sm:grid-cols-4" action="{% url 'prediction' %}", method="post">
+        <form class="mx-auto grid max-w-screen-md gap-4 sm:grid-cols-2" action="{% url 'prediction' %}" method="post">
           {% csrf_token %}
           
           <!-- Logical quotient rating -->
-          <div class="sm:col-span-2">
+          <div class="sm:col-span-1">
             <label
               for="logical-quotient-rating"
-              class="mb-2 inline-block text-sm text-gray-800 sm:text-base"
+              class="mb-1 inline-block text-sm text-gray-800 sm:text-base"
               >Logical quotient rating (1-10)*</label
             >
             <input
@@ -89,10 +74,10 @@
           </div>
 
           <!-- Hackathons -->
-          <div class="sm:col-span-2">
+          <div class="sm:col-span-1">
             <label
               for="hackathons"
-              class="mb-2 inline-block text-sm text-gray-800 sm:text-base"
+              class="mb-1 inline-block text-sm text-gray-800 sm:text-base"
               >Hackathons</label
             >
             <input
@@ -105,31 +90,31 @@
           </div>
 
           <!-- Coding skills rating -->
-          <div class="sm:col-span-2">
+          <div class="sm:col-span-1">
             <label
               for="coding-skills-rating"
-              class="mb-2 inline-block text-sm text-gray-800 sm:text-base"
+              class="mb-1 inline-block text-sm text-gray-800 sm:text-base"
               >Coding skills rating (1-10)*</label
             >
             <input
               required
-              value="{{ coding_skills_rating  }}"
+              value="{{ coding_skills_rating }}"
               type="text"
               name="coding_skills"
               class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring"
             />
           </div>
 
-          <!-- Public Speaking    -->
-          <div class="sm:col-span-2">
+          <!-- Public Speaking -->
+          <div class="sm:col-span-1">
             <label
               for="public-speaking-points"
-              class="mb-2 inline-block text-sm text-gray-800 sm:text-base"
+              class="mb-1 inline-block text-sm text-gray-800 sm:text-base"
               >Public Speaking points (1-10)*</label
             >
             <input
               required
-              value="{{ coding_skills_rating  }}"
+              value="{{ coding_skills_rating }}"
               type="text"
               name="public_speaking_points"
               min="1"
@@ -139,9 +124,9 @@
           </div>
 
           <!-- Certifications -->
-          <div class="sm:col-span-2">
-            <label for="certifications" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Certifications*</label>
-            <select name="certifications" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+          <div class="sm:col-span-1">
+            <label for="certifications" class="mb-1 inline-block text-sm text-gray-800 sm:text-base">Certifications*</label>
+            <select name="certifications" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring">
                 <option value="information security" {% if certifications == "information security" %}selected{% endif %}>Information Security</option>
                 <option value="shell programming" {% if certifications == "shell programming" %}selected{% endif %}>Shell Programming</option>
                 <option value="r programming" {% if certifications == "r programming" %}selected{% endif %}>R Programming</option>
@@ -155,9 +140,9 @@
           </div>
 
           <!-- Workshops -->
-          <div class="sm:col-span-2">
-            <label for="workshops" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Workshops*</label>
-            <select name="workshops" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+          <div class="sm:col-span-1">
+            <label for="workshops" class="mb-1 inline-block text-sm text-gray-800 sm:text-base">Workshops*</label>
+            <select name="workshops" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring">
                 <option value="testing" {% if workshops == "testing" %}selected{% endif %}>Testing</option>
                 <option value="database security" {% if workshops == "database security" %}selected{% endif %}>Database Security</option>
                 <option value="game development" {% if workshops == "game development" %}selected{% endif %}>Game Development</option>
@@ -170,9 +155,9 @@
           </div>
 
           <!-- Interested Subjects -->
-          <div class="sm:col-span-2">
-            <label for="interested-subjects" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Interested Subjects*</label>
-            <select name="interested_subjects" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+          <div class="sm:col-span-1">
+            <label for="interested-subjects" class="mb-1 inline-block text-sm text-gray-800 sm:text-base">Interested Subjects*</label>
+            <select name="interested_subjects" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring">
                 <option value="programming" {% if interested_subjects == "programming" %}selected{% endif %}>Programming</option>
                 <option value="management" {% if interested_subjects == "management" %}selected{% endif %}>Management</option>
                 <option value="networks" {% if interested_subjects == "networks" %}selected{% endif %}>Networks</option>
@@ -187,9 +172,9 @@
           </div>
 
           <!-- Interested Career Area -->
-          <div class="sm:col-span-2">
-            <label for="interested-career-area" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Interested Career Area*</label>
-            <select name="interested_career_area" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+          <div class="sm:col-span-1">
+            <label for="interested-career-area" class="mb-1 inline-block text-sm text-gray-800 sm:text-base">Interested Career Area*</label>
+            <select name="interested_career_area" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring">
                 <option value="testing" {% if interested_career_area == "testing" %}selected{% endif %}>Testing</option>
                 <option value="system developer" {% if interested_career_area == "system developer" %}selected{% endif %}>System Developer</option>
                 <option value="Business process analyst" {% if interested_career_area == "Business process analyst" %}selected{% endif %}>Business Process Analyst</option>
@@ -200,9 +185,9 @@
           </div>
 
           <!-- Type of Company Want to Settle In -->
-          <div class="sm:col-span-2">
-            <label for="Type-of-company-want-to-settle-in?" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Type of company want to settle in?*</label>
-            <select name="Type_of_company_want_to_settle_in" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+          <div class="sm:col-span-1">
+            <label for="Type-of-company-want-to-settle-in?" class="mb-1 inline-block text-sm text-gray-800 sm:text-base">Type of company want to settle in?*</label>
+            <select name="Type_of_company_want_to_settle_in" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring">
                 <option value="BPA" {% if Type_of_company_want_to_settle_in == "BPA" %}selected{% endif %}>BPA</option>
                 <option value="Cloud Services" {% if Type_of_company_want_to_settle_in == "Cloud Services" %}selected{% endif %}>Cloud Services</option>
                 <option value="product development," {% if Type_of_company_want_to_settle_in == "product development," %}selected{% endif %}>Product Development</option>
@@ -217,41 +202,39 @@
           </div>
       
           <!-- Management or Technical -->
-          <div class="sm:col-span-2">
-            <label for="management_technical" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Management or Technical*</label>
-            <select name="management_technical" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+          <div class="sm:col-span-1">
+            <label for="management_technical" class="mb-1 inline-block text-sm text-gray-800 sm:text-base">Management or Technical*</label>
+            <select name="management_technical" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring">
                 <option value="Management" {% if management_technical == "Management" %}selected{% endif %}>Management</option>
                 <option value="Technical" {% if management_technical == "Technical" %}selected{% endif %}>Technical</option>
             </select>
           </div>
 
-
           <!-- Worked in Teams -->
-          <div class="sm:col-span-2">
-            <label for="team" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Worked in teams ever?*</label>
-            <select name="team" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+          <div class="sm:col-span-1">
+            <label for="team" class="mb-1 inline-block text-sm text-gray-800 sm:text-base">Worked in teams ever?*</label>
+            <select name="team" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring">
                 <option value="yes" {% if team == "yes" %}selected{% endif %}>Yes</option>
                 <option value="no" {% if team == "no" %}selected{% endif %}>No</option>
             </select>
           </div>
 
           <!-- Introvert -->
-          <div class="sm:col-span-2">
-            <label for="introvert" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Introvert*</label>
-            <select name="introvert" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+          <div class="sm:col-span-1">
+            <label for="introvert" class="mb-1 inline-block text-sm text-gray-800 sm:text-base">Introvert*</label>
+            <select name="introvert" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring">
                 <option value="yes" {% if introvert == "yes" %}selected{% endif %}>Yes</option>
                 <option value="no" {% if introvert == "no" %}selected{% endif %}>No</option>
             </select>
           </div>
 
-          <div class="ml-80 flex items-center justify-between sm:col-span-2">
-            <button type="submit" class="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700 md:text-base">Predict</button>
-    
+          <div class="col-span-2 flex justify-center mt-4">
+            <button type="submit" class="inline-block rounded-lg bg-indigo-500 px-6 py-2 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700">Predict</button>
           </div>
 
         </form>
         <!-- form- end -->
 
         <br>
-
+    </div>
 {% endblock %}
