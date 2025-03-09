@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% block content %}
+    <!-- form - start -->
+    <div class="bg-gray-100 p-6 rounded-lg shadow-lg">
+        <!-- text - start -->
+        <div class="mb-10 md:mb-16">
+          <h2
+            class="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl"
+          >
+            What's Your Ideal Career Journey?
+          </h2>
+
+          <p class="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">Discover Your Ideal Career Path with This Fun Test! You've Got What It Takes, Ready to Explore?.</p>
+        </div>
+        <!-- text - end -->
+        <!-- {% if result %}
+          <h2 class="mb-4 text-center text-2xl font-bold text-red-600 md:mb-6 lg:text-3xl">
+            Predicted Job Role: {{ result }}
+          </h2>
+        {% endif %} -->
+         <!--og form-->
+
+         {% if roadmap %}
+         <div class="ml-32 mr-32 flex bg-white p-4 rounded-lg shadow-lg mb-6">
+             <!-- Left Side: Image -->
+             <div class="w-2/3">
+                 <a href="{{ roadmap.pdf.url }}" target="_blank">
+                     <img src="{{ roadmap.image.url }}" alt="{{ roadmap.title }}" class="w-full h-100 object-cover rounded-lg object-center">
+                 </a>
+             </div>
+             
+             <!-- Right Side: Details -->
+             <div class="w-2/3 pl-4">
+              <br>
+                 <h3 class="text-3xl text-center font-bold text-gray-800">{{ roadmap.title }}</h3>
+                 <br>
+                 <h3 class="text-xl  font-bold text-gray-800">Average Salary: {{ roadmap.average_salary }} LPA</h3>
+                 <br>
+                 <h3 class="text-xl  font-bold text-gray-800">Verified By:  {{ roadmap.verified_by }}</h3>
+                 <br>
+                 <div class="flex items-center justify-center">
+                  
+                  <a href="{{ roadmap.pdf.url }}" class="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 focus-visible:ring active:bg-indigo-700 md:text-base">
+                    Open Roadmap
+                  </a>
+                </div>
+             </div>
+         </div>
+         {% endif %}
+          
+        <h1 class="mb-4 text-center text-xl font-bold text-gray-800 md:mb-6 lg:text-3xl">
+          Let's Check your Logical Rating
+        </h1>
+        
+        <div class="flex items-center justify-center">
+          <a href="{% url 'quiz' %}" class="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 focus-visible:ring active:bg-indigo-700 md:text-base">
+            Start
+          </a>
+        </div>
+        
+
+        
+        {% if logical_quotient_rating is not None %}
+          <h2 class="mb-4 text-center text-xl font-bold text-green-500 md:mb-6 lg:text-3xl">
+            Your Logical Rating: {{ logical_quotient_rating }}
+          </h2>
+        {% endif %}
+
+        <form class="mx-auto grid max-w-screen-md gap-4 sm:grid-cols-4" action="{% url 'prediction' %}", method="post">
+          {% csrf_token %}
+          
+          <!-- Logical quotient rating -->
+          <div class="sm:col-span-2">
+            <label
+              for="logical-quotient-rating"
+              class="mb-2 inline-block text-sm text-gray-800 sm:text-base"
+              >Logical quotient rating (1-10)*</label
+            >
+            <input
+              disabled
+              required
+              value="{{ logical_quotient_rating }}"
+              type="text"
+              name="logical_quotient_rating"
+              min="1"
+              max="10"
+              class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring"
+            /> 
+          </div>
+
+          <!-- Hackathons -->
+          <div class="sm:col-span-2">
+            <label
+              for="hackathons"
+              class="mb-2 inline-block text-sm text-gray-800 sm:text-base"
+              >Hackathons</label
+            >
+            <input
+              required
+              value="{{ hackathons.0 }}"
+              type="text"
+              name="hackathons"
+              class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring"
+            />
+          </div>
+
+          <!-- Coding skills rating -->
+          <div class="sm:col-span-2">
+            <label
+              for="coding-skills-rating"
+              class="mb-2 inline-block text-sm text-gray-800 sm:text-base"
+              >Coding skills rating (1-10)*</label
+            >
+            <input
+              required
+              value="{{ coding_skills_rating  }}"
+              type="text"
+              name="coding_skills"
+              class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring"
+            />
+          </div>
+
+          <!-- Public Speaking    -->
+          <div class="sm:col-span-2">
+            <label
+              for="public-speaking-points"
+              class="mb-2 inline-block text-sm text-gray-800 sm:text-base"
+              >Public Speaking points (1-10)*</label
+            >
+            <input
+              required
+              value="{{ coding_skills_rating  }}"
+              type="text"
+              name="public_speaking_points"
+              min="1"
+              max="10"
+              class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring"
+            />
+          </div>
+
+          <!-- Certifications -->
+          <div class="sm:col-span-2">
+            <label for="certifications" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Certifications*</label>
+            <select name="certifications" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+                <option value="information security" {% if certifications == "information security" %}selected{% endif %}>Information Security</option>
+                <option value="shell programming" {% if certifications == "shell programming" %}selected{% endif %}>Shell Programming</option>
+                <option value="r programming" {% if certifications == "r programming" %}selected{% endif %}>R Programming</option>
+                <option value="distro making" {% if certifications == "distro making" %}selected{% endif %}>Distro Making</option>
+                <option value="machine learning" {% if certifications == "machine learning" %}selected{% endif %}>Machine Learning</option>
+                <option value="full stack" {% if certifications == "full stack" %}selected{% endif %}>Full Stack</option>
+                <option value="app development" {% if certifications == "app development" %}selected{% endif %}>App Development</option>
+                <option value="python" {% if certifications == "python" %}selected{% endif %}>Python</option>
+                <option value="hadoop" {% if certifications == "hadoop" %}selected{% endif %}>Hadoop</option>
+            </select>
+          </div>
+
+          <!-- Workshops -->
+          <div class="sm:col-span-2">
+            <label for="workshops" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Workshops*</label>
+            <select name="workshops" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+                <option value="testing" {% if workshops == "testing" %}selected{% endif %}>Testing</option>
+                <option value="database security" {% if workshops == "database security" %}selected{% endif %}>Database Security</option>
+                <option value="game development" {% if workshops == "game development" %}selected{% endif %}>Game Development</option>
+                <option value="data science" {% if workshops == "data science" %}selected{% endif %}>Data Science</option>
+                <option value="system designing" {% if workshops == "system designing" %}selected{% endif %}>System Designing</option>
+                <option value="hacking" {% if workshops == "hacking" %}selected{% endif %}>Hacking</option>
+                <option value="cloud computing" {% if workshops == "cloud computing" %}selected{% endif %}>Cloud Computing</option>
+                <option value="web technologies" {% if workshops == "web technologies" %}selected{% endif %}>Web Technologies</option>
+            </select>
+          </div>
+
+          <!-- Interested Subjects -->
+          <div class="sm:col-span-2">
+            <label for="interested-subjects" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Interested Subjects*</label>
+            <select name="interested_subjects" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+                <option value="programming" {% if interested_subjects == "programming" %}selected{% endif %}>Programming</option>
+                <option value="management" {% if interested_subjects == "management" %}selected{% endif %}>Management</option>
+                <option value="networks" {% if interested_subjects == "networks" %}selected{% endif %}>Networks</option>
+                <option value="software engineering" {% if interested_subjects == "software engineering" %}selected{% endif %}>Software Engineering</option>
+                <option value="cloud computing" {% if interested_subjects == "cloud computing" %}selected{% endif %}>Cloud Computing</option>
+                <option value="parallel" {% if interested_subjects == "parallel" %}selected{% endif %}>Parallel Computing</option>
+                <option value="IOT" {% if interested_subjects == "IOT" %}selected{% endif %}>IoT</option>
+                <option value="Computer architecture" {% if interested_subjects == "Computer architecture" %}selected{% endif %}>Computer Architecture</option>
+                <option value="hacking" {% if interested_subjects == "hacking" %}selected{% endif %}>Hacking</option>
+                <option value="data engineering" {% if interested_subjects == "data engineering" %}selected{% endif %}>Data Engineering</option>
+            </select>
+          </div>
+
+          <!-- Interested Career Area -->
+          <div class="sm:col-span-2">
+            <label for="interested-career-area" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Interested Career Area*</label>
+            <select name="interested_career_area" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+                <option value="testing" {% if interested_career_area == "testing" %}selected{% endif %}>Testing</option>
+                <option value="system developer" {% if interested_career_area == "system developer" %}selected{% endif %}>System Developer</option>
+                <option value="Business process analyst" {% if interested_career_area == "Business process analyst" %}selected{% endif %}>Business Process Analyst</option>
+                <option value="security" {% if interested_career_area == "security" %}selected{% endif %}>Security</option>
+                <option value="developer" {% if interested_career_area == "developer" %}selected{% endif %}>Developer</option>
+                <option value="cloud computing" {% if interested_career_area == "cloud computing" %}selected{% endif %}>Cloud Computing</option>
+            </select>
+          </div>
+
+          <!-- Type of Company Want to Settle In -->
+          <div class="sm:col-span-2">
+            <label for="Type-of-company-want-to-settle-in?" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Type of company want to settle in?*</label>
+            <select name="Type_of_company_want_to_settle_in" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+                <option value="BPA" {% if Type_of_company_want_to_settle_in == "BPA" %}selected{% endif %}>BPA</option>
+                <option value="Cloud Services" {% if Type_of_company_want_to_settle_in == "Cloud Services" %}selected{% endif %}>Cloud Services</option>
+                <option value="product development," {% if Type_of_company_want_to_settle_in == "product development," %}selected{% endif %}>Product Development</option>
+                <option value="Testing and Maintainance Services" {% if Type_of_company_want_to_settle_in == "Testing and Maintainance Services" %}selected{% endif %}>Testing and Maintenance Services</option>
+                <option value="SAaS services" {% if Type_of_company_want_to_settle_in == "SAaS services" %}selected{% endif %}>SAaS Services</option>
+                <option value="Web Services" {% if Type_of_company_want_to_settle_in == "Web Services" %}selected{% endif %}>Web Services</option>
+                <option value="Finance" {% if Type_of_company_want_to_settle_in == "Finance" %}selected{% endif %}>Finance</option>
+                <option value="Sales and Marketing" {% if Type_of_company_want_to_settle_in == "Sales and Marketing" %}selected{% endif %}>Sales and Marketing</option>
+                <option value="Product based" {% if Type_of_company_want_to_settle_in == "Product based" %}selected{% endif %}>Product Based</option>
+                <option value="Service Based" {% if Type_of_company_want_to_settle_in == "Service Based" %}selected{% endif %}>Service Based</option>
+            </select>
+          </div>
+      
+          <!-- Management or Technical -->
+          <div class="sm:col-span-2">
+            <label for="management_technical" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Management or Technical*</label>
+            <select name="management_technical" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+                <option value="Management" {% if management_technical == "Management" %}selected{% endif %}>Management</option>
+                <option value="Technical" {% if management_technical == "Technical" %}selected{% endif %}>Technical</option>
+            </select>
+          </div>
+
+
+          <!-- Worked in Teams -->
+          <div class="sm:col-span-2">
+            <label for="team" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Worked in teams ever?*</label>
+            <select name="team" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+                <option value="yes" {% if team == "yes" %}selected{% endif %}>Yes</option>
+                <option value="no" {% if team == "no" %}selected{% endif %}>No</option>
+            </select>
+          </div>
+
+          <!-- Introvert -->
+          <div class="sm:col-span-2">
+            <label for="introvert" class="mb-2 inline-block text-sm text-gray-800 sm:text-base">Introvert*</label>
+            <select name="introvert" class="w-full rounded border bg-gray-50 px-3 py-2 text-gray-800 outline-none ring-indigo-300 transition duration-100 focus:ring ml-2">
+                <option value="yes" {% if introvert == "yes" %}selected{% endif %}>Yes</option>
+                <option value="no" {% if introvert == "no" %}selected{% endif %}>No</option>
+            </select>
+          </div>
+
+          <div class="ml-80 flex items-center justify-between sm:col-span-2">
+            <button type="submit" class="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700 md:text-base">Predict</button>
+    
+          </div>
+
+        </form>
+        <!-- form- end -->
+
+        <br>
+
+{% endblock %}

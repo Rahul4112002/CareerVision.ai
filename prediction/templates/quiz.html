@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="bg-gray-100 p-6 rounded-lg shadow-lg">
+    <h1 class="mb-4 text-center text-xl font-bold text-gray-800 md:mb-6 lg:text-3xl">MCQ Quiz</h1>
+    <form class="mx-auto max-w-screen-md grid gap-6" method="post" action="{% url 'submit_quiz' %}">
+        {% csrf_token %}
+        {% for question in questions %}
+            <fieldset class="mb-4">
+                <legend class="text-lg font-bold text-gray-800">
+                    {{ forloop.counter }}. {{ question.question_text }}
+                </legend>
+                {% for choice in question.choice_set.all %}
+                <div class="flex items-center gap-2">
+                    <input class="text-indigo-500" type="radio" name="question_{{ question.id }}" value="{{ choice.id }}" required>
+                    <label class="text-gray-800">{{ choice.choice_text }}</label>
+                </div>
+                {% endfor %}
+            </fieldset>
+        {% endfor %}
+        <div class="text-center">
+            <button class="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700 md:text-base" type="submit">Submit Quiz</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

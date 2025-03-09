@@ -1,0 +1,15 @@
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    height: 3%; /* Ensure it's above other content */
+  }
+  .border-b {
+    border-bottom-width: 1px;
+  }
+  .bg-white-100 img {
+    object-fit: cover;
+    object-position: center;
+  }
+  

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white py-6 sm:py-8 lg:py-12">
+  <div class="mx-auto max-w-screen-2xl px-4 md:px-8">
+    <div class="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-8">
+      {% for roadmap in roadmaps  %}
+      <div class="flex flex-col overflow-hidden rounded-lg border bg-white">
+        <a href="{{ roadmap.pdf.url }}" class="group relative block h-48 overflow-hidden bg-gray-100 md:h-64">
+          <img src="{{ roadmap.image.url }}" loading="lazy" alt="Photo by Minh Pham" class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+        </a>
+
+        <div class="flex flex-1 flex-col p-4 sm:p-6">
+          <h2 class="mb-2 ml-16 text-2xl font-semibold text-gray-800">
+            <a href="{{ roadmap.pdf.url }}" class="transition duration-100 hover:text-indigo-500 active:text-indigo-600">{{ roadmap.title }}</a>
+          </h2>
+        </div>
+      </div>
+      {% endfor %}
+  </div>
+</div>
+{% endblock %}
+

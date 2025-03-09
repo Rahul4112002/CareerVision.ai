@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="bg-gray-100 p-6 rounded-lg shadow-lg">
+        {% if result %}
+          <!-- <h2 class="mb-4 text-center text-2xl font-bold text-red-600 md:mb-6 lg:text-3xl">
+            Predicted Job Role: {{ result }}
+          </h2> -->
+          <div class="mb-10 md:mb-16">
+            <h2 class="mb-4 text-center text-2xl font-bold text-gray-800 md:mb-6 lg:text-3xl">
+              Your Ideal Career Path is: <span class="text-blue-600">{{ result }}</span>
+            </h2>
+          
+            <p class="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">
+              Based on your skills and preferences, we recommend <span class="font-semibold text-gray-800">{{ result }}</span>.  
+              Explore the roadmap to start your journey!
+            </p>
+
+            <br>
+
+        {% if roadmap %}
+            <div class="ml-32 mr-32 flex bg-white p-4 rounded-lg shadow-lg mb-6">
+                    <!-- Left Side: Image -->
+                <div class="w-2/3">
+                    <a href="{{ roadmap.pdf.url }}" target="_blank">
+                        <img src="{{ roadmap.image.url }}" 
+                            alt="{{ roadmap.title }}" 
+                            class="w-full h-80 object-contain rounded-lg object-center">
+                    </a>
+                </div>
+                    
+                    <!-- Right Side: Details -->
+                <div class="w-2/3 pl-4">
+                    <br>
+                        <h3 class="text-3xl text-center font-bold text-gray-800">{{ roadmap.title }}</h3>
+                        <br>
+
+                        <h3 class="text-xl font-bold text-indigo-800">Recommended Roles</h3>
+
+                        <p class="text-lg text-gray-700">
+                            {% for c in cat %}
+                                {{ c }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                        
+                        <h3 class="text-3xl text-center font-bold text-gray-800"></h3>
+                        <br>
+                        <h3 class="text-xl  font-bold text-gray-800">Average Salary: {{ roadmap.average_salary }} LPA</h3>
+                        <br>
+                        <h3 class="text-xl  font-bold text-gray-800">Verified By:  {{ roadmap.verified_by }}</h3>
+                        <br>
+                        <div class="flex items-center justify-center">
+                        
+                        <a href="{{ roadmap.pdf.url }}" class="inline-block rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 focus-visible:ring active:bg-indigo-700 md:text-base">
+                            Open Roadmap
+                        </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+
+            <!-- Add this section after your existing roadmap section -->
+            <div class="mt-8 mx-32">
+                <h2 class="text-3xl text-center font-bold text-gray-800 mb-6">Latest Job Opportunities</h2>
+                
+                {% if job_listings %}
+                <div class="grid grid-cols-2 gap-6">
+                    {% for job in job_listings %}
+                    <div class="bg-white rounded-lg shadow-lg p-6 transition-transform duration-300 hover:scale-102 hover:shadow-xl">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-bold text-indigo-600 mb-2">{{ job.title }}</h3>
+                                <p class="text-gray-600 font-semibold mb-2">{{ job.company }}</p>
+                                <p class="text-gray-500 mb-2">
+                                    <span class="inline-flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                        {{ job.location }}
+                                    </span>
+                                </p>
+                            </div>
+                            <p class="text-sm text-gray-500">Posted: {{ job.posted_date }}</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <p class="text-gray-600 mb-4">{{ job.description }}</p>
+                            {% if job.salary != 'Salary not specified' %}
+                            <p class="text-green-600 font-semibold mb-4">{{ job.salary }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mt-4 flex justify-end">
+                            <a href="{{ job.url }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300">
+                                Apply Now
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="bg-white rounded-lg shadow p-6 text-center">
+                    <p class="text-gray-600">No job listings available at the moment. Please try again later.</p>
+                    <p class="text-sm text-gray-500 mt-2">You can try searching on job portals like LinkedIn, Indeed, or Naukri.com</p>
+                </div>
+                {% endif %}
+            </div>
+    </div>
+{% endblock content %}
