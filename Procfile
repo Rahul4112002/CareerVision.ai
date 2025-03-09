@@ -1,1 +1,1 @@
-web: gunicorn careervision.wsgi
+web: gunicorn jobroleprediction.wsgi
