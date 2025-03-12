@@ -2,6 +2,12 @@
 
 Welcome to **CareerVision.ai**, a web application designed to guide users in their career journey by predicting suitable job roles, providing personalized learning paths, and offering recent job and internship opportunities. 🎯
 
+
+
+Uploading untitled-video-made-with-clipchamp_gOhy5RyA.mp4…
+
+
+
 ## Features 🌟
 
 - **AI-Powered Job Role Prediction**: Utilizes a Deep Learning-based Multi-Layer Perceptron (MLP) classifier to suggest job roles tailored to user inputs.
