@@ -4,7 +4,10 @@ Welcome to **CareerVision.ai**, a web application designed to guide users in the
 
 
 
-Uploading untitled-video-made-with-clipchamp_gOhy5RyA.mp4…
+
+https://github.com/user-attachments/assets/26824c9b-b59d-407d-92de-30831e79d7d0
+
+
 
 
 
