@@ -1,8 +1,0 @@
-asgiref
-dj-database-url
-Django==5.1.4
-gunicorn
-psycopg2-binary
-python-dotenv
-requests
-whitenoise
