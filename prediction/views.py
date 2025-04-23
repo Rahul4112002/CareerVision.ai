@@ -6,7 +6,10 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
-
+# Add to the top of views.py
+from .skill_analyzer import SkillGapAnalyzer
+import json
+from django.http import JsonResponse
 
 
 # model = pickle.load(open("prediction/models/best_student_job_role_model.pkl","rb"))
@@ -125,24 +128,116 @@ def home(request):
 
 
 # Deep Learning Prediction Function
+# def prediction(request): 
+#     result = ''
+#     show_data = {}
+#     roadmap = None
+
+#     # Retrieve the logical quotient rating from session
+#     # score = request.session.get('logical_quotient_rating', None)
+#     # # If the page is accessed without taking the quiz, reset the score
+#     # if not request.session.get('quiz_taken', False):
+#     #     score = None
+    
+#     if request.session.get('quiz_taken', False):
+#         score = request.session.get('logical_quotient_rating', None)
+#     else:
+#         score = None
+
+#     show_data = {
+#         "logical_quotient_rating": score,  # Show score on prediction page immediately
+#         "result": result,
+#         "roadmap": roadmap
+#     }
+    
+#     if request.method == 'POST':
+#         if not request.session.get('quiz_taken', False):
+#             # If quiz hasn't been taken, redirect to quiz page
+#             return redirect('quiz')
+#         # logical_quotient_rating = request.session.get('logical_quotient_rating', 0)
+
+#         input_data_dict = {
+#             "Logical quotient rating": [score],
+#             "hackathons": [int(request.POST.get('hackathons', "0"))],
+#             "coding skills rating": [int(request.POST.get('coding_skills', "0"))],
+#             "public speaking points": [int(request.POST.get('public_speaking_points', "0"))],
+#             "certifications": [request.POST.get('certifications', "Unknown")],
+#             "workshops": [request.POST.get('workshops', "Unknown")],
+#             "Interested subjects": [request.POST.get('interested_subjects', "Unknown")],
+#             "interested career area ": [request.POST.get('interested_career_area', "Unknown")],
+#             "Type of company want to settle in?": [request.POST.get('Type_of_company_want_to_settle_in', "Unknown")],
+#             "Management or Technical": [request.POST.get('management_technical', "Unknown")],
+#             "worked in teams ever?": [request.POST.get('team', "No")],
+#             "Introvert": [request.POST.get('introvert', "No")]
+#         }
+
+#         input_df = pd.DataFrame.from_dict(input_data_dict)
+#         input_df = input_df.astype(str)
+
+#         new_data_encoded = loaded_encoder.transform(input_df)
+#         new_data_scaled = loaded_scaler.transform(new_data_encoded)
+
+#         prediction = loaded_model.predict(new_data_scaled)
+#         result = prediction[0]
+
+           
+        
+#         job_roles = {
+#             'CRM/Managerial Roles': ['CRM Business Analyst', 'CRM Technical Developer', 'Project Manager', 'Information Technology Manager'],
+#             'Analyst': ['Business Systems Analyst', 'Business Intelligence Analyst', 'E-Commerce Analyst'],
+#             'Mobile Applications/ Web Development': ['Mobile Applications Developer', 'Web Developer', 'Applications Developer'],
+#             'QA/Testing': ['Software Quality Assurance (QA) / Testing', 'Quality Assurance Associate'],
+#             'UX/Design': ['UX Designer', 'Design & UX'],
+#             'Databases': ['Database Developer', 'Database Administrator', 'Database Manager', 'Portal Administrator'],
+#             'Programming/ Systems Analyst': ['Programmer Analyst', 'Systems Analyst'],
+#             'Networks/ Systems': ['Network Security Administrator', 'Network Security Engineer', 'Network Engineer', 'Systems Security Administrator', 'Software Systems Engineer', 'Information Security Analyst'],
+#             'SE/SDE': ['Software Engineer', 'Software Developer'],
+#             'Technical Support/Service': ['Technical Engineer', 'Technical Services/Help Desk/Tech Support', 'Technical Support'],
+#             'others': ['Solutions Architect', 'Data Architect', 'Information Technology Auditor']
+#         }
+
+#         suggested_roles = job_roles.get(result, ['Unknown'])
+        
+        
+#         show_data.update({
+#             "hackathons": request.POST.get('hackathons', "0"),
+#             "coding_skills_rating": request.POST.get('coding_skills', "0"),
+#             "public_speaking_points": request.POST.get('public_speaking_points', "0"),
+#             "certifications": request.POST.get('certifications', "Unknown"),
+#             "workshops": request.POST.get('workshops', "Unknown"),
+#             "interested_subjects": request.POST.get('interested_subjects', "Unknown"),
+#             "interested_career_area": request.POST.get('interested_career_area', "Unknown"),
+#             "Type_of_company_want_to_settle_in": request.POST.get('Type_of_company_want_to_settle_in', "Unknown"),
+#             "management_technical": request.POST.get('management_technical', "Unknown"),
+#             "team": request.POST.get('team', "No"),
+#             "introvert": request.POST.get('introvert', "No"),
+#             'score': score,
+#             'result': result,
+#             'roadmap': roadmap,
+#             'suggested_roles': suggested_roles,
+#             'logical_quotient_rating': score  # Make sure to include this in the updated data
+#         })
+        
+#         # Store the prediction result in session
+#         request.session['predicted_role'] = result
+        
+#         return redirect('job')
+        
+
+#     return render(request, 'prediction.html', show_data)
+# Modify prediction view to store user data in session
 def prediction(request): 
     result = ''
     show_data = {}
     roadmap = None
 
-    # Retrieve the logical quotient rating from session
-    # score = request.session.get('logical_quotient_rating', None)
-    # # If the page is accessed without taking the quiz, reset the score
-    # if not request.session.get('quiz_taken', False):
-    #     score = None
-    
     if request.session.get('quiz_taken', False):
         score = request.session.get('logical_quotient_rating', None)
     else:
         score = None
 
     show_data = {
-        "logical_quotient_rating": score,  # Show score on prediction page immediately
+        "logical_quotient_rating": score,
         "result": result,
         "roadmap": roadmap
     }
@@ -151,7 +246,19 @@ def prediction(request):
         if not request.session.get('quiz_taken', False):
             # If quiz hasn't been taken, redirect to quiz page
             return redirect('quiz')
-        # logical_quotient_rating = request.session.get('logical_quotient_rating', 0)
+
+        # Store form data in session
+        request.session['hackathons'] = request.POST.get('hackathons', "0")
+        request.session['coding_skills_rating'] = request.POST.get('coding_skills', "0")
+        request.session['public_speaking_points'] = request.POST.get('public_speaking_points', "0")
+        request.session['certifications'] = request.POST.get('certifications', "Unknown")
+        request.session['workshops'] = request.POST.get('workshops', "Unknown")
+        request.session['interested_subjects'] = request.POST.get('interested_subjects', "Unknown")
+        request.session['interested_career_area'] = request.POST.get('interested_career_area', "Unknown")
+        request.session['Type_of_company_want_to_settle_in'] = request.POST.get('Type_of_company_want_to_settle_in', "Unknown")
+        request.session['management_technical'] = request.POST.get('management_technical', "Unknown")
+        request.session['team'] = request.POST.get('team', "No")
+        request.session['introvert'] = request.POST.get('introvert', "No")
 
         input_data_dict = {
             "Logical quotient rating": [score],
@@ -176,8 +283,6 @@ def prediction(request):
 
         prediction = loaded_model.predict(new_data_scaled)
         result = prediction[0]
-
-           
         
         job_roles = {
             'CRM/Managerial Roles': ['CRM Business Analyst', 'CRM Technical Developer', 'Project Manager', 'Information Technology Manager'],
@@ -195,7 +300,6 @@ def prediction(request):
 
         suggested_roles = job_roles.get(result, ['Unknown'])
         
-        
         show_data.update({
             "hackathons": request.POST.get('hackathons', "0"),
             "coding_skills_rating": request.POST.get('coding_skills', "0"),
@@ -212,7 +316,7 @@ def prediction(request):
             'result': result,
             'roadmap': roadmap,
             'suggested_roles': suggested_roles,
-            'logical_quotient_rating': score  # Make sure to include this in the updated data
+            'logical_quotient_rating': score
         })
         
         # Store the prediction result in session
@@ -220,8 +324,8 @@ def prediction(request):
         
         return redirect('job')
         
-
     return render(request, 'prediction.html', show_data)
+
 
 
 # Add these imports at the top
@@ -322,13 +426,110 @@ def fetch_jobs_from_adzuna(job_category, num_jobs=5):
         # Return empty list in case of error
         return []
 
+# Add this new view function
+def skill_gap_analysis(request):
+    if request.method == 'GET':
+        # Get the user's predicted role from session
+        result = request.session.get('predicted_role', None)
+        
+        # If there's no prediction result, redirect to prediction page
+        if result is None:
+            return redirect('prediction')
+        
+        # Get user data from session
+        user_data = {
+            'logical_quotient_rating': request.session.get('logical_quotient_rating', 0),
+            'hackathons': request.session.get('hackathons', 0),
+            'coding_skills_rating': request.session.get('coding_skills_rating', 0),
+            'public_speaking_points': request.session.get('public_speaking_points', 0),
+            'certifications': request.session.get('certifications', ''),
+            'workshops': request.session.get('workshops', ''),
+            'interested_subjects': request.session.get('interested_subjects', ''),
+            'interested_career_area': request.session.get('interested_career_area', ''),
+            'Type_of_company_want_to_settle_in': request.session.get('Type_of_company_want_to_settle_in', ''),
+            'management_technical': request.session.get('management_technical', ''),
+            'team': request.session.get('team', ''),
+            'introvert': request.session.get('introvert', '')
+        }
+        
+        # Create a skill gap analyzer
+        analyzer = SkillGapAnalyzer()
+        
+        # Create a learning plan
+        learning_plan = analyzer.create_learning_plan(user_data, result)
+        
+        # Store learning plan in session for future use
+        request.session['learning_plan'] = learning_plan
+        
+        # Render the skill gap analysis page
+        return render(request, 'skill_gap.html', {'learning_plan': learning_plan})
 
 
-
+# def job_view(request):
+#     # Get the prediction result from session
+#     result = request.session.get('predicted_role', None)
+    
+    
+#     # If there's no prediction result, redirect to prediction page
+#     if result is None:
+#         return redirect('prediction')
+    
+#     roadmap = Roadmap.objects.filter(title__icontains=result).first()
+    
+#     CRM_Managerial_Roles = ['CRM Business Analyst','CRM Technical Developer','Project Manager','Information Technology Manager']
+#     Analyst = ['Business Systems Analyst','Business Intelligence Analyst','E-Commerce Analyst']
+#     Mobile_Applications_Web_Development = ['Mobile Applications Developer','Web Developer','Applications Developer']
+#     QA_Testing = ['Software Quality Assurance (QA) / Testing','Quality Assurance Associate']
+#     UX_Design = ['UX Designer','Design & UX']
+#     Databases = ['Database Developer','Database Administrator','Database Manager','Portal Administrator']
+#     Programming_Systems_Analyst = ['Programmer Analyst','Systems Analyst']
+#     Networks_Systems = ['Network Security Administrator','Network Security Engineer','Network Engineer', 'Systems Security Administrator','Software Systems Engineer','Information Security Analyst']
+#     SE_SDE = ['Software Engineer','Software Developer']
+#     Technical_Support_Service = ['Technical Engineer','Technical Services/Help Desk/Tech Support','Technical Support']
+#     others = ['Solutions Architect','Data Architect','Information Technology Auditor']
+        
+#     if result == 'CRM/Managerial Roles':
+#         cat=CRM_Managerial_Roles
+#     elif result == 'Analyst':
+#         cat=Analyst
+#     elif result == 'Mobile Applications/ Web Development':
+#         cat=Mobile_Applications_Web_Development
+#     elif result == 'QA/Testing':
+#         cat=QA_Testing
+#     elif result == 'UX/Design':
+#         cat=UX_Design
+#     elif result == 'Databases':
+#         cat=Databases
+#     elif result == 'Programming/ Systems Analyst':
+#         cat=Programming_Systems_Analyst
+#     elif result == 'Networks/ Systems':
+#         cat=Networks_Systems
+#     elif result == 'SE/SDE':
+#         cat=SE_SDE
+#     elif result == 'Technical Support/Service':
+#         cat=Technical_Support_Service
+#     else:
+#         cat=others
+    
+#     # Fetch job listings with error handling
+#     try:
+#         job_listings = fetch_jobs_from_adzuna(result)
+#     except Exception as e:
+#         print(f"Error in job_view: {str(e)}")
+#         job_listings = []
+    
+#     context = {
+#         'result': result,
+#         'roadmap': roadmap,
+#         'cat': cat,  # Make sure 'cat' is defined in your view
+#         'job_listings': job_listings
+#     }
+        
+#     return render(request, 'job.html', context)
+# Modify the job_view to include skill gap analysis
 def job_view(request):
     # Get the prediction result from session
     result = request.session.get('predicted_role', None)
-    
     
     # If there's no prediction result, redirect to prediction page
     if result is None:
@@ -336,6 +537,7 @@ def job_view(request):
     
     roadmap = Roadmap.objects.filter(title__icontains=result).first()
     
+    # Define job categories
     CRM_Managerial_Roles = ['CRM Business Analyst','CRM Technical Developer','Project Manager','Information Technology Manager']
     Analyst = ['Business Systems Analyst','Business Intelligence Analyst','E-Commerce Analyst']
     Mobile_Applications_Web_Development = ['Mobile Applications Developer','Web Developer','Applications Developer']
@@ -378,14 +580,41 @@ def job_view(request):
         print(f"Error in job_view: {str(e)}")
         job_listings = []
     
+    # Get user data from session
+    user_data = {
+        'logical_quotient_rating': request.session.get('logical_quotient_rating', 0),
+        'hackathons': request.session.get('hackathons', 0),
+        'coding_skills_rating': request.session.get('coding_skills_rating', 0),
+        'public_speaking_points': request.session.get('public_speaking_points', 0),
+        'certifications': request.session.get('certifications', ''),
+        'workshops': request.session.get('workshops', ''),
+        'interested_subjects': request.session.get('interested_subjects', ''),
+        'interested_career_area': request.session.get('interested_career_area', ''),
+        'Type_of_company_want_to_settle_in': request.session.get('Type_of_company_want_to_settle_in', ''),
+        'management_technical': request.session.get('management_technical', ''),
+        'team': request.session.get('team', ''),
+        'introvert': request.session.get('introvert', '')
+    }
+    
+    # Create a skill gap analyzer
+    analyzer = SkillGapAnalyzer()
+    
+    # Create a learning plan
+    learning_plan = analyzer.create_learning_plan(user_data, result)
+    
+    # Store learning plan in session for future use
+    request.session['learning_plan'] = learning_plan
+    
     context = {
         'result': result,
         'roadmap': roadmap,
-        'cat': cat,  # Make sure 'cat' is defined in your view
-        'job_listings': job_listings
+        'cat': cat,
+        'job_listings': job_listings,
+        'learning_plan': learning_plan
     }
         
     return render(request, 'job.html', context)
+
 
 def roadmap(request):
     roadmaps = Roadmap.objects.all()

@@ -27,3 +27,45 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
+
+
+
+# New models for Skill Gap Analyzer feature
+class Skill(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.CharField(max_length=100)  # e.g., "Technical", "Soft skill", etc.
+    
+    def __str__(self):
+        return self.name
+
+class JobRoleSkill(models.Model):
+    job_role = models.CharField(max_length=100)  # e.g., "SE/SDE", "Analyst"
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
+    importance = models.IntegerField(default=5)  # Scale 1-10
+    
+    def __str__(self):
+        return f"{self.job_role} - {self.skill.name}"
+
+class LearningResource(models.Model):
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    url = models.URLField()
+    resource_type = models.CharField(max_length=50)  # e.g., "Course", "Video", "Book"
+    is_free = models.BooleanField(default=True)
+    provider = models.CharField(max_length=100, null=True, blank=True)  # e.g., "Coursera", "YouTube", "Udemy"
+    
+    def __str__(self):
+        return self.title
+
+class UserSkillGapAnalysis(models.Model):
+    # No direct user relation since we're not using Django auth system in this project
+    session_id = models.CharField(max_length=100)  # Store session ID to associate with a session
+    job_role = models.CharField(max_length=100)
+    current_skills = models.TextField()  # Store as JSON
+    required_skills = models.TextField()  # Store as JSON
+    skill_gaps = models.TextField()  # Store as JSON
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Analysis for {self.job_role} - {self.created_at}"

@@ -18,10 +18,10 @@ import dj_database_url
 # Load environment variables from .env file
 load_dotenv()
 
-# Then replace the direct assignments with:
-ADZUNA_APP_ID = os.getenv('ADZUNA_APP_ID')
-ADZUNA_APP_KEY = os.getenv('ADZUNA_APP_KEY')
-
+# Then use os.environ instead of os.getenv
+ADZUNA_APP_ID = os.environ.get('ADZUNA_APP_ID')
+ADZUNA_APP_KEY = os.environ.get('ADZUNA_APP_KEY')
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

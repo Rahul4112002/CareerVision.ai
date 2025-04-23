@@ -52,6 +52,75 @@
             {% endif %}
         </div>
         {% endif %}
+      
+{% if learning_plan %}
+<div class="mt-8 mb-6">
+    <h2 class="text-xl md:text-2xl lg:text-3xl text-center font-bold text-gray-800 mb-4 md:mb-6">Your Personalized Skill Gap Analysis</h2>
+    
+    <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 mb-6">
+        <div class="mb-4">
+            <h3 class="text-lg md:text-xl font-bold text-indigo-800 mb-2">Current Skills</h3>
+            <div class="flex flex-wrap gap-2">
+                {% for skill in learning_plan.current_skills %}
+                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <h3 class="text-lg md:text-xl font-bold text-indigo-800 mb-2">Required Skills for {{ learning_plan.job_role }}</h3>
+            <div class="flex flex-wrap gap-2">
+                {% for skill in learning_plan.required_skills %}
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        
+        {% if learning_plan.skill_gaps %}
+        <div>
+            <h3 class="text-lg md:text-xl font-bold text-indigo-800 mb-2">Skills to Develop</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for skill_gap in learning_plan.skill_gaps %}
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h4 class="font-bold text-lg text-gray-800 mb-2">{{ skill_gap.name }}</h4>
+                    
+                    <div class="flex items-center mb-3">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ skill_gap.current_proficiency|floatformat:0|default:0 }}0%"></div>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-600">{{ skill_gap.current_proficiency }}/10</span>
+                    </div>
+                    
+                    <h5 class="font-semibold text-indigo-600 mb-2">Recommended Resources:</h5>
+                    <ul class="space-y-2">
+                        {% for resource in skill_gap.resources %}
+                        <li class="border-b border-gray-100 pb-2">
+                            <a href="{{ resource.url }}" target="_blank" class="text-blue-600 hover:underline font-medium">{{ resource.title }}</a>
+                            <div class="flex items-center text-xs mt-1">
+                                <span class="bg-gray-100 text-gray-800 px-2 py-0.5 rounded">{{ resource.type }}</span>
+                                {% if resource.is_free %}
+                                <span class="bg-green-100 text-green-800 px-2 py-0.5 rounded ml-2">Free</span>
+                                {% else %}
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded ml-2">Paid</span>
+                                {% endif %}
+                                <span class="ml-2 text-gray-500">{{ resource.provider }}</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="bg-green-50 p-4 rounded-lg text-center">
+            <p class="text-green-700 font-medium">Congratulations! You already have all the skills needed for this role.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
 
         <!-- Job Opportunities Section -->
         <div class="mt-6 md:mt-8 mx-auto">
