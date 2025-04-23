@@ -1,0 +1,14 @@
+{
+    "builds": [
+      {
+        "src": "jobroleprediction/wsgi.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "jobroleprediction/wsgi.py"
+      }
+    ]
+  }
